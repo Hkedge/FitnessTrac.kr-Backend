@@ -10,5 +10,5 @@ module.exports = {
     `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
   UserDoesNotExistError: (name) => `User ${name} does not exist`,
   PasswordTooShortError: () => `Password Too Short!`,
-  UserTakenError: name => `User ${name} is already taken.`
+  UserTakenError: (name) => `User ${name} is already taken.`
 }

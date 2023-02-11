@@ -1,6 +1,4 @@
-/* 
-DO NOT CHANGE THIS FILE
-*/
+// * Provided by Fullstack no changes needed 
 const client = require('./client');
 const { rebuildDB } = require('./seedData');
 
