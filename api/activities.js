@@ -77,30 +77,55 @@ activitiesRouter.post("/", async (req, res, next) => {
 
 // * PATCH /api/activities/:activityId - Passing all tests
 activitiesRouter.patch("/:activityId", async (req, res, next) => {
+    const { name } = req.body
     const { activityId } = req.params
 
     try{
 
         const activityToUpdate = await getActivityById(activityId);
 
-        if (!activityToUpdate) {
+        if (activityToUpdate) {
+
+            if(activityToUpdate.name !== name){
+
+                const activityNameExists = await getActivityByName(name);
+
+                if (activityNameExists) {
+
+                    next({
+                        error: "Activity name already exists",
+                        name: "Activity name already exists",
+                        message: ActivityExistsError(name)
+                    });
+
+                } else {
+                
+                    req.body.id = activityId;
+                    const updatedActivity = await updateActivity(req.body);
+                    res.send(updatedActivity);
+                }
+            
+            } else {                    
+                
+                req.body.id = activityId;
+                const updatedActivity = await updateActivity(req.body);
+                res.send(updatedActivity);
+            } 
+        
+        } else {
 
             next({
                 error: "Activity to update does not exist",
                 name: "Activity to update does not exist",
                 message: ActivityNotFoundError(activityId)
-            }); 
+            });
 
-        } else {
-
-            req.body.id = activityId;
-            const updatedActivity = await updateActivity(req.body);
-            res.send(updatedActivity);
-        }
+        } 
 
     } catch(error) {
         next(error);
     }
+
 })
 
 module.exports = activitiesRouter;
